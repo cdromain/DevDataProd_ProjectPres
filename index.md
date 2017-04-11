@@ -2,30 +2,30 @@
 
 /* slide titles */
 .reveal h3 { 
-  font-size: 45px; ##60px
+  font-size: 45px;
   color: black;
 }
 
 /* heading for slides with two hashes ## */
 .reveal .slides section .slideContent h2 {
-   font-size: 35px; ##40px
+   font-size: 35px;
    font-weight: bold;
    color: #25679E;
 }
 
 /* ordered and unordered list styles */
 .reveal ul {
-    font-size: 25px; ##50px
+    font-size: 25px;
     list-style-type: square;
 }
 
 .reveal ol {
-    font-size: 25px; ##50px
+    font-size: 25px;
+    line-height: 0.2em;
 }
 
 .reveal p {
-    font-size: 25px; ##50px
-    color: red;
+    font-size: 25px;
     list-style-type: square;
 }
 
@@ -102,6 +102,7 @@ Link to the app : https://cdromain.shinyapps.io/prediction_playground/
 
 3. *Playing* with the app enabled me to deepen my understanding and intuitions regarding machine learning concepts (which was the initial goal) - hopefully, the app will benefit others in the same way.
 
+
 DATA SELECTION AND MODEL BUILDING
 ========================================================
 
@@ -112,6 +113,7 @@ DATA SELECTION AND MODEL BUILDING
 ## Included help
 - Application functionalities.
 - Data sets.
+
 
 RESULTS AND MODEL EVALUATION
 ========================================================
@@ -128,6 +130,7 @@ plot(cars)
 <img src="index-figure/unnamed-chunk-1-1.png" title="plot of chunk unnamed-chunk-1" alt="plot of chunk unnamed-chunk-1" width="200" height="200" />
 
 *INCLUDE AND SHOW R CALCULATION code as an example*
+
 
 CREDITS
 ========================================================

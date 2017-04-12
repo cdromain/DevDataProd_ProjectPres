@@ -13,6 +13,12 @@
    color: #25679E;
 }
 
+/* heading for slides with four hashes #### */
+.reveal .slides section .slideContent h4 {
+   font-size: 25px;
+   color: #25679E;
+}
+
 /* ordered and unordered list styles */
 .reveal ul {
     font-size: 25px;
@@ -25,10 +31,13 @@
 }
 
 .reveal p {
-    font-size: 25px;
+    font-size: 23px;
     list-style-type: square;
 }
 
+.reveal small {
+	font-size: 0.75em;
+}
 
 .reveal strong {
   #color: #25679E;
@@ -46,7 +55,7 @@
 }
 
 .reveal code {
-  font-size: 1em;
+  font-size: 0.9em;
   background-color: #f8f8f8;
   color : #b11d42;
 }
@@ -90,7 +99,7 @@ A PEDAGOGICAL PROJECT
 
 Started from the wish to be able to actually *play* with **machine learning** concepts and models in an interactive manner in order to develop understanding and intuition - hence the idea of a *"playground"*.     
 
-The idea is to be able to quickly apply different models to different data sets, using different predictors and compare the resulting outputs.
+The idea is to be able to quickly apply different prediction models to different data sets, splitting the data into training and test sets, choosing the outcome and the predictors, building the model and finally evaluate the accuracy of the model predictions. The application interface makes possible to **learn** by seeing how changing parameters affect the resulting predictions. And like in every playground, errors can happen and are part of the experience-based learning process.
 
 Link to the app : https://cdromain.shinyapps.io/prediction_playground/
 
@@ -98,7 +107,7 @@ Link to the app : https://cdromain.shinyapps.io/prediction_playground/
 
 1. This project allowed me to learn how to develop a web application using [Shiny](https://shiny.rstudio.com/) reactive framework in RStudio.</small>
 
-2. Developing the app gave me an opportunity to learn more about **machine learning** concepts and models.
+2. Developing the app gave me an opportunity to learn more about **machine learning** fundamental concepts and models.
 
 3. *Playing* with the app enabled me to deepen my understanding and intuitions regarding machine learning concepts (which was the initial goal) - hopefully, the app will benefit others in the same way.
 
@@ -106,13 +115,29 @@ Link to the app : https://cdromain.shinyapps.io/prediction_playground/
 DATA SELECTION AND MODEL BUILDING
 ========================================================
 
-## Data selection
 
-## Model building
+#### 1. Select a data set
+<small>*Click on the ? button to get more info about the selected data set.*</small>
 
-## Included help
-- Application functionalities.
-- Data sets.
+#### 2. Choose the outcome variable
+
+#### 3. Choose the predictors variables
+<small>*Default = all, except the outcome variable (which is automatically removed from the list).*</small>
+
+#### 4. Partition the data using the slider
+<small>*This % gets assigned to the training set while the remaining data goes to the test set.*</small>
+
+#### 5. Choose k for k-fold cross-validation using the slider
+<small>*Choose 1 to disable C.V.*</small>
+
+#### 6. Choose the prediction model
+<small>*The chosen model will be trained and then used for prediction. "C" means classification only and "R" regression only.*</small>
+
+#### 7. Optionally set the seed to 1234
+<small>*The seed concerns both data partitioning and model building for reproducibility purposes.*</small>
+
+***
+![Application GUI](index-figure/app_screencap1.png)
 
 
 RESULTS AND MODEL EVALUATION
@@ -132,9 +157,19 @@ plot(cars)
 *INCLUDE AND SHOW R CALCULATION code as an example*
 
 
-CREDITS
+CLOSING WORDS
 ========================================================
 
-- This HTML5 presentation was created in RStudio version 1.0.136 (R version 3.3.3, OSX 10.11.6) using the [R Presentation](https://support.rstudio.com/hc/en-us/articles/200486468-Authoring-R-Presentations) format with custom CSS (added inside the `.Rpres` file, available on the presentation [GitHub repo](https://github.com/cdromain/DevDataProd_ProjectPres)).
+## Possible improvements
 
-- This reproducible pitch presentation was produced for the *Developing Data Products* course project, part of the Johns Hopkins Data Science Specialization on [Coursera](http://coursera.org/).
+- Add more data sets and models.
+- Add the possibility to tune specific models parameters (e.g. `ntree` and `mtry` for random forests).
+- Add the possibility to compare two models (for example using tabs).
+
+## Credits
+
+- This app is powered and made possible by the [`caret`](https://topepo.github.io/caret/) package and its interface unifying different predictive algorithms.
+
+- The interactive plot displayed both in the application and this presentation is powered by the [`plotly`](https://cran.r-project.org/web/packages/plotly/index.html) package and [graphing library](https://plot.ly/r/).
+
+- This HTML5 reproducible pitch presentation was created in RStudio version 1.0.136 (R version 3.3.3, OSX 10.11.6) using the [R Presentation](https://support.rstudio.com/hc/en-us/articles/200486468-Authoring-R-Presentations) format with custom CSS (added inside the `.Rpres` file, available on the presentation [GitHub repo](https://github.com/cdromain/DevDataProd_ProjectPres)), for the *Developing Data Products* course project, part of the Johns Hopkins Data Science Specialization on [Coursera](http://coursera.org/).

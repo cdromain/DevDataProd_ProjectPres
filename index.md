@@ -143,7 +143,7 @@ DATA SELECTION AND MODEL BUILDING
 RESULTS AND MODEL EVALUATION
 ========================================================
 
-Here is an example of the application output, using the `faitful` data set and a linear model with 5-fold cross-validation ($80\%$ of the data in the training set and $20\%$ in the test set), predicting on the test set :
+Here is an example of the application output, using the `faithful` data set and a linear model with 5-fold cross-validation ($80\%$ of the data in the training set and $20\%$ in the test set), predicting on the test set :
 
 <small>*(Note : the code that was evaluated to generate the output below is available on the presentation [GitHub repo](https://github.com/cdromain/DevDataProd_ProjectPres))*</small>
 

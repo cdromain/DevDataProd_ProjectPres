@@ -23,11 +23,11 @@
 .reveal ul {
     font-size: 25px;
     list-style-type: square;
+    line-height: 0.2em;
 }
 
 .reveal ol {
     font-size: 25px;
-    line-height: 0.2em;
 }
 
 .reveal p {
@@ -61,7 +61,7 @@
 }
 
 .section .reveal h1 {
-   font-size: 1.5em;
+   font-size: 1.3em;
    line-height: 1.5em;     
 }
 
@@ -86,7 +86,7 @@
 
 </style>
 
-Developing Data Products course project : Prediction Playground
+DEVELOPING DATA PRODUCTS course project : Prediction Playground
 ========================================================
 author: Romain Faure
 date: April 2017
@@ -97,9 +97,9 @@ A PEDAGOGICAL PROJECT
 
 ## Introducing *Prediction Playground*
 
-Started from the wish to be able to actually *play* with **machine learning** concepts and models in an interactive manner in order to develop understanding and intuition - hence the idea of a *"playground"*.     
+Started from the wish to be able to actually *play* with **machine learning** concepts and models in an interactive manner, in order to develop understanding and intuition - hence the idea of a *"playground"*.     
 
-The idea is to be able to quickly apply different prediction models to different data sets, splitting the data into training and test sets, choosing the outcome and the predictors, building the model and finally evaluate the accuracy of the model predictions. The application interface makes possible to **learn** by seeing how changing parameters affect the resulting predictions. And like in every playground, errors can happen and are part of the experience-based learning process.
+The idea is to be able to quickly apply different prediction models to different data sets, splitting the data into training and test sets, choosing the outcome and the predictors, building the model and finally evaluate the accuracy of the model predictions. The application interface makes it possible to **learn** by seeing how changing parameters affect the resulting predictions accuracy. And like in every playground, errors can happen and are part of such an **experience-based** learning process.
 
 Link to the app : https://cdromain.shinyapps.io/prediction_playground/
 
@@ -107,9 +107,9 @@ Link to the app : https://cdromain.shinyapps.io/prediction_playground/
 
 1. This project allowed me to learn how to develop a web application using [Shiny](https://shiny.rstudio.com/) reactive framework in RStudio.</small>
 
-2. Developing the app gave me an opportunity to learn more about **machine learning** fundamental concepts and models.
+2. Developing the app gave me an opportunity to review and learn more about **machine learning** fundamental concepts and models.
 
-3. *Playing* with the app enabled me to deepen my understanding and intuitions regarding machine learning concepts (which was the initial goal) - hopefully, the app will benefit others in the same way.
+3. *Playing* with the app enabled me to deepen my understanding and intuitions regarding machine learning concepts (which was the initial goal) - hopefully, the app can benefit others in the same way.
 
 
 DATA SELECTION AND MODEL BUILDING
@@ -124,49 +124,88 @@ DATA SELECTION AND MODEL BUILDING
 #### 3. Choose the predictors variables
 <small>*Default = all, except the outcome variable (which is automatically removed from the list).*</small>
 
-#### 4. Partition the data using the slider
+#### 4. Partition the data using the first slider
 <small>*This % gets assigned to the training set while the remaining data goes to the test set.*</small>
 
-#### 5. Choose k for k-fold cross-validation using the slider
+#### 5. Choose k for k-fold cross-validation using the second slider
 <small>*Choose 1 to disable C.V.*</small>
 
 #### 6. Choose the prediction model
-<small>*The chosen model will be trained and then used for prediction. "C" means classification only and "R" regression only.*</small>
+<small>*The chosen model will be trained and then used for prediction on the test set. "C" means classification only and "R" regression only.*</small>
 
 #### 7. Optionally set the seed to 1234
 <small>*The seed concerns both data partitioning and model building for reproducibility purposes.*</small>
 
 ***
-![Application GUI](index-figure/app_screencap1.png)
+![Application GUI](index-figure/app_screencap.png)
 
 
 RESULTS AND MODEL EVALUATION
 ========================================================
 
-## Numerical output
+Here is an example of the application output, using the `faitful` data set and a linear model with 5-fold cross-validation ($80\%$ of the data in the training set and $20\%$ in the test set), predicting on the test set :
 
-## Plot
+<small>*(Note : the code that was evaluated to generate the output below is available on the presentation [GitHub repo](https://github.com/cdromain/DevDataProd_ProjectPres))*</small>
 
-```{r, echo=TRUE, out.width=200, out.height=200}
-plot(cars)
+## Prediction accuracy measures
+
+```{r, echo=FALSE}
+library(ggplot2)
+library(plotly)
+library(caret)
+data("faithful")
+set.seed(1234)
+inTrain <- createDataPartition(y = faithful$waiting, p = 0.8, list = FALSE)
+train <- faithful[inTrain, ]
+test <- faithful[-inTrain, ]
+x <- "eruptions"
+y <- "waiting"
+method <- "lm"
+k <- 5
+fitControl <- trainControl(method = "cv", number = k)
+model1 <- train(reformulate(x, response = y), method = method, 
+                data = train, trControl = fitControl, na.action = na.fail)
+
+pred <- predict(model1, test)
+postResample(pred, test$waiting)
+
+predDF <- data.frame(x = test$eruptions, y = pred, label = "predicted values")
+names(predDF) <- c(x, y, "label")
+testDF <- data.frame(test, label = "test set values")
+                
+g <- ggplot(data = testDF, aes(x = testDF[1], y = testDF[2])) +  
+        geom_point(aes(colour = testDF$label), size = 2, alpha = 0.6)
+                
+g <- g + geom_point(aes(x = predDF[1], y = predDF[2], colour = predDF$label), 
+                    size = 2, alpha = 0.4, inherit.aes = FALSE)
+                
+g <- g + theme(axis.title = element_text(size = 10)) + 
+                labs(x = x, y = y) + scale_color_manual(values=c("#468cc8", "red"), 
+                                                                 name = "Legend (show/hide)")
+                
+gp <- ggplotly(g, tooltip = c("x","y"))
+htmlwidgets::saveWidget(as.widget(gp), file = "plotly.html")
 ```
 
-*INCLUDE AND SHOW R CALCULATION code as an example*
+## Interactive Plotly plot
+<iframe src="plotly.html" style="position:absolute;height:50%;width:55%"></iframe>
 
 
 CLOSING WORDS
 ========================================================
 
-## Possible improvements
+## Future improvements
 
-- Add more data sets and models.
-- Add the possibility to tune specific models parameters (e.g. `ntree` and `mtry` for random forests).
-- Add the possibility to compare two models (for example using tabs).
+- More models. Boosting, bagging and model ensembling.
+
+- Add the possibility to tune specific model parameters (e.g. `ntree` and `mtry` for random forests).
+
+- Add tabs to compare models outputs and display different evaluation/diagnosis plots.
 
 ## Credits
 
-- This app is powered and made possible by the [`caret`](https://topepo.github.io/caret/) package and its interface unifying different predictive algorithms.
+- The *Prediction Playground* [Shiny](https://shiny.rstudio.com/) web application is powered and made possible by the [`caret`](https://topepo.github.io/caret/) package and its interface unifying different predictive algorithms. The interactive plot displayed both in the app and this presentation is powered by the [`plotly`](https://cran.r-project.org/web/packages/plotly/index.html) package and [graphing library](https://plot.ly/r/). Several other packages were used for data sets and predictive models (see the complete list in the `server.R` file in the app [GitHub repo](https://github.com/cdromain/DevDataProd_ProjectApp)).
 
-- The interactive plot displayed both in the application and this presentation is powered by the [`plotly`](https://cran.r-project.org/web/packages/plotly/index.html) package and [graphing library](https://plot.ly/r/).
+- This HTML5 reproducible pitch presentation was created using the [R Presentation](https://support.rstudio.com/hc/en-us/articles/200486468-Authoring-R-Presentations) format with custom CSS (added inside the `.Rpres` file, available on the presentation [GitHub repo](https://github.com/cdromain/DevDataProd_ProjectPres)).
 
-- This HTML5 reproducible pitch presentation was created in RStudio version 1.0.136 (R version 3.3.3, OSX 10.11.6) using the [R Presentation](https://support.rstudio.com/hc/en-us/articles/200486468-Authoring-R-Presentations) format with custom CSS (added inside the `.Rpres` file, available on the presentation [GitHub repo](https://github.com/cdromain/DevDataProd_ProjectPres)), for the *Developing Data Products* course project, part of the Johns Hopkins Data Science Specialization on [Coursera](http://coursera.org/).
+- Both the presentation and the app were created for the *Developing Data Products* course project, part of the Johns Hopkins Data Science Specialization on [Coursera](http://coursera.org/), using RStudio version 1.0.136 (R version 3.3.3, OSX 10.11.6) in April 2017.
